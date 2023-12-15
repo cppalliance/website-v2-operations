@@ -54,6 +54,7 @@ set req.http.Cookie = regsuball(req.http.Cookie, "^;\s*", "");
 # Are there cookies left with only spaces or that are empty?
 if (req.http.cookie ~ "^\s*$") {
   unset req.http.cookie;
+  unset req.http.Cookie:config-sessionid;
 }
 ``` 
 
