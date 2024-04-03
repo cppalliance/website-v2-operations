@@ -51,18 +51,19 @@ set req.http.Cookie = regsuball(req.http.Cookie, "__qc.=[^;]+(; )?", "");
 # Remove the AddThis cookies
 set req.http.Cookie = regsuball(req.http.Cookie, "__atuv.=[^;]+(; )?", "");
 
-# S.D. 2023 Remove csrftoken
 if ( req.url ~ "^/doc/" ) {
-  unset req.http.Cookie:csrftoken;
+  # unset req.http.Cookie:csrftoken;
+  # unset req.http.Cookie:config-sessionid;
+  # Let's remove all cookies in /doc/ :
+  unset req.http.Cookie;
 }
-  
+
 # Remove a ";" prefix in the cookie if present
 set req.http.Cookie = regsuball(req.http.Cookie, "^;\s*", "");
 
 # Are there cookies left with only spaces or that are empty?
 if (req.http.cookie ~ "^\s*$") {
   unset req.http.cookie;
-  unset req.http.Cookie:config-sessionid;
 }
 ``` 
 
