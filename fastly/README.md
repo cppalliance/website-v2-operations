@@ -57,6 +57,14 @@ if ( req.url ~ "^/doc/" ) {
   # Let's remove all cookies in /doc/ :
   unset req.http.Cookie;
 }
+ 
+if ( req.url ~ "^/libraries/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
+
+if ( req.url ~ "^/releases/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
 
 # Remove a ";" prefix in the cookie if present
 set req.http.Cookie = regsuball(req.http.Cookie, "^;\s*", "");
@@ -67,11 +75,65 @@ if (req.http.cookie ~ "^\s*$") {
 }
 ``` 
 
-'Doc cache age'
+'Doc cache age'. Also see [cache-ttls.md](cache-ttls.md).  
+
+Staging:  
 
 ```
-if ( req.url ~ "^/doc/" ) {
+if ( req.url ~ "^/$" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/news/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/user-guide/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/contributor-guide/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/community/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/libraries/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/releases/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/" ) {
+  set beresp.ttl = 600s;
+  return (deliver);
+}
+```
+
+Production:  
+
+```
+if ( req.url ~ "^/$" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/news/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/user-guide/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/contributor-guide/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/community/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/libraries/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/releases/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/" ) {
   set beresp.ttl = 604800s;
   return (deliver);
 }
 ```
+
