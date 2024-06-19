@@ -23,15 +23,15 @@ Default 300s
 
 Production:  
 
-Home Page / : 300s  
+Home Page / : 3600s  
 News /news/ : 300s  
-User Guide /doc/user-guide/ : 300s  
-Contributor Guide /doc/contributor-guide/ : 300s  
-Community /community/ : 300s  
-Libraries /libraries/ : 300s  
-Releases /releases/ : 300s  
+User Guide /doc/user-guide/ : 3600s  
+Contributor Guide /doc/contributor-guide/ : 3600s  
+Community /community/ : 3600s  
+Libraries /libraries/ : 3600s  
+Releases /releases/ : 3600s  
 Library Documentation /doc/ : 604800s (one week)  
-Default 300s  
+Default 3600s  
 
 These TTLs may change in the future.
 

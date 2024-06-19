@@ -111,25 +111,25 @@ Production:
 
 ```
 if ( req.url ~ "^/$" ) {
-  set beresp.ttl = 300s;
+  set beresp.ttl = 3600s;
   return (deliver);
 } else if ( req.url ~ "^/news/" ) {
   set beresp.ttl = 300s;
   return (deliver);
 } else if ( req.url ~ "^/doc/user-guide/" ) {
-  set beresp.ttl = 300s;
+  set beresp.ttl = 3600s;
   return (deliver);
 } else if ( req.url ~ "^/doc/contributor-guide/" ) {
-  set beresp.ttl = 300s;
+  set beresp.ttl = 3600s;
   return (deliver);
 } else if ( req.url ~ "^/community/" ) {
-  set beresp.ttl = 300s;
+  set beresp.ttl = 3600s;
   return (deliver);
 } else if ( req.url ~ "^/libraries/" ) {
-  set beresp.ttl = 300s;
+  set beresp.ttl = 3600s;
   return (deliver);
 } else if ( req.url ~ "^/releases/" ) {
-  set beresp.ttl = 300s;
+  set beresp.ttl = 3600s;
   return (deliver);
 } else if ( req.url ~ "^/doc/" ) {
   set beresp.ttl = 604800s;
@@ -137,3 +137,4 @@ if ( req.url ~ "^/$" ) {
 }
 ```
 
+Default 3600s
