@@ -17,8 +17,8 @@ Media:
 
 Docs: 
   - archives/ - Boost documentation. Full boost releases.
-  - site-docs/ - Content from the https://github.com/cppalliance/site-docs build/ directory. See GHA in that repo.  
-  - site-pages/ - Content from the https://github.com/cppalliance/site-docs site-pages/ directory. See GHA in that repo.  
+  - site-docs/ - Content from the https://github.com/boostorg/website-v2-docs build/ directory. See GHA in that repo.
+  - site-pages/ - Content from the https://github.com/boostorg/website-v2-docs site-pages/ directory. See GHA in that repo.
 
 | Bucket Name | Description |
 | ----------- | ----------- |

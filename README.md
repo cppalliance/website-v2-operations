@@ -7,7 +7,7 @@ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 Official repository: https://github.com/boostorg/website-v2
 -->
 
-## Temp-Site Documentation  
+## Website v2 Infrastructure Documentation  
 
 Website operations, infrastructure and server hosting. 
 
