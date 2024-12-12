@@ -20,9 +20,9 @@ More details:
 
 The website-v2-docs build process is covered in [website-v2-docs/antora-ui/README.adoc](https://github.com/boostorg/website-v2-docs/blob/develop/antora-ui/README.adoc). Antora knows about the boostorg/boostlook repository and automatically downloads the latest boostlook.css. See website-v2-docs/antora-ui/gulp.d/tasks/build.js.  
 
-When a new commit is made in the boostorg/boostlook repository a Github Action in boostorg/boostlook remotely triggers the boostorg/website-v2-docs workflows to run. (2024-11-22 Julio is working on this).
+When a new commit is made in the boostorg/boostlook repository a Github Action in boostorg/boostlook remotely triggers the boostorg/website-v2-docs workflows to run.
 
-A commit is pushed to the static/ folder of website-v2, `develop` branch. That causes a new deployment of staging on website-v2. (2024-11-22 Julio is working on this, it has already gone through iterations).  
+A commit is pushed to the static/ folder of website-v2, `develop` branch. That causes a new deployment of staging on website-v2.
 
 ## Boost Docs on the website
 
