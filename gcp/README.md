@@ -56,6 +56,8 @@ Double check your cluster settings. Pay extra attention to the ones that can't b
 
 On a local computer, follow these steps to gain access.  
 
+Hint: it's convenient to launch a docker container locally, and run all of this in a container which will isolate the environment on your computer. However that is not required.  
+
 Install gcloud. https://cloud.google.com/sdk/docs/install#deb
 
 Login to gcloud:
