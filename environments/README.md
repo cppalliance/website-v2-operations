@@ -150,7 +150,7 @@ PRs are opened, but they haven't been merged yet. Send a request for review/appr
 
 When that happens, run the git commands listed above. Those can eventually be streamlined into an improved script, so they are easier and quicker to run frequently. That will deploy the PR onto https://www.cppal-dev.boost.org. Test. Approve the PR. Then the PR can be merged directly into develop.  
 
-Based on the example commands shown above, create a new bash shell script `./merge-pr.sh 1234` which merges a pull request easily into https://github.com/cppalliance/website-v2-qa  in one step. This will involved adding some if-else statements to skip certain steps.  
+Based on the example commands shown above, create a new bash shell script `./merge-pr.sh 1234` which merges a pull request easily into https://github.com/cppalliance/website-v2-qa  in one step. This will involve adding some if-else statements to skip certain steps.  
 
 Just as a reference, another bash script, that accomplishes a different task, is here [deploy-website.sh](https://github.com/boostorg/website-v2/blob/develop/docs/scripts/deploy-website.sh). Maybe the QA department can work on developing `merge-pr.sh`? Let me know. 
 
