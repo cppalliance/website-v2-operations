@@ -12,8 +12,8 @@ Official repository: https://github.com/boostorg/website-v2
 If you are interested in testing the Boost website-v2, it is possible you do not need a full cloud deployment. Some alternatives include:
 
 - Local docker-compose: [development_setup_notes](https://github.com/boostorg/website-v2/blob/develop/docs/development_setup_notes.md)
-- The existing staging site: https://www.stage.boost.cppalliance.org/
-- The existing production site: https://www.boost.io/
+- The existing staging site: https://www.stage.boost.org/
+- The existing production site: https://www.boost.org/
 
 All of those options are more convenient. In particular, docker-compose. If you will be joining the C++ Alliance's development efforts, code may be checked in directly to the staging and production sites, so another site isn't needed.
 
