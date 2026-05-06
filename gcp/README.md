@@ -104,6 +104,11 @@ https://console.cloud.google.com/memorystore/redis/instances?referrer=search&pro
 | production-redis | Standard |	6.x | us-central1 | 1 GB |
 | stage-redis |	Basic |	6.x | us-central1 | 1 GB |
 
+Add configuration settings to each redis memorystore instance:  
+activedefrag yes  
+maxmemory-policy allkeys-lru  
+maxmemory-gb (set as a percentage) 0.9  
+
 ---
 
 Artifact Registry
