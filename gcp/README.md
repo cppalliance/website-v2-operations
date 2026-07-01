@@ -54,6 +54,8 @@ Double check your cluster settings. Pay extra attention to the ones that can't b
   Boot disk encryption: Google-managed
 ``` 
 
+## Connect to the web server instances
+
 On a local computer, follow these steps to gain access.  
 
 Hint: it's convenient to launch a docker container locally, and run all of this in a container which will isolate the environment on your computer. However that is not required.  
@@ -90,6 +92,14 @@ Configure kubectl:
 ```
 alias k='kubectl'
 k config set-context --current --namespace=__
+```
+
+Run kubectl commands:
+
+```
+k get pods -n cppal-dev
+k get pods -n stage
+k exec -it pod/__ -n stage -- bash
 ```
 
 ---
