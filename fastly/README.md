@@ -27,6 +27,29 @@ Configuration Steps:
 
 - VCL Snippets:  
 
+It is possible to export snippets with curl:   
+
+```
+#!/bin/bash
+
+set -xe
+
+# Modify these variables
+TOKEN=___
+SERVICE_ID=ObmCBsU66JY4JTRwOGjCf2
+VERSION=5
+
+curl -o snippets.json -H "Fastly-Key: $TOKEN" \
+  "https://api.fastly.com/service/$SERVICE_ID/version/$VERSION/snippet"
+
+jq -r '.[] | "=== \(.name) (\(.type)) ===\n\(.content)\n"' snippets.json > snippets.txt
+
+```
+
+2026 - Recent content has been dumped to [snippets.txt](snippets.txt)
+
+Below were notes from 2024.  
+
 'Remove certain cookies'
 
 If more cookies are added to the website, they must be included in this snippet.

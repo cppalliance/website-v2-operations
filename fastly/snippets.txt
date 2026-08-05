@@ -1,0 +1,136 @@
+=== Doc cache age (fetch) ===
+if ( (beresp.status == 301 || beresp.status == 302) && beresp.http.vary !~ "Cookie") {
+    set beresp.http.vary = beresp.http.vary", Cookie";
+}
+if ( beresp.status == 404 ) {
+    # 404 Cache Setting
+    set beresp.ttl = 600s;
+    set beresp.grace = 600s;
+    return(deliver);
+}
+if ( beresp.status == 503 ) {
+    # 503 Cache Setting
+    set beresp.ttl = 600s;
+    set beresp.grace = 600s;
+    return(deliver);
+}
+if ( beresp.status == 301 ) {
+    # 301 Cache Setting
+    set beresp.ttl = 600s;
+    set beresp.grace = 600s;
+    return(deliver);
+}
+if ( beresp.status == 302 ) {
+    # 302 Cache Setting
+    set beresp.ttl = 600s;
+    set beresp.grace = 600s;
+    return(deliver);
+}
+if ( req.url ~ "^/$" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/static/css/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/news/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/user-guide/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/contributor-guide/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/community/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/libraries/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/releases/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/libs/develop/" ) {
+  set beresp.ttl = 1200s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/libs/master/" ) {
+  set beresp.ttl = 1200s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/" ) {
+  set beresp.ttl = 604800s;
+  return (deliver);
+}
+
+=== Remove certain cookies (recv) ===
+# 2026-03-12 Bypass caching for logged in users, during metalab development
+# Temporary.
+if (req.url !~ "^/doc/" && req.http.Cookie ~ "config-sessionid=" && req.http.Cookie ~ "csrftoken=") {
+    return (pass);
+}
+
+# Some generic cookie manipulation, useful for all templates that follow
+# Remove the "has_js" cookie
+set req.http.Cookie = regsuball(req.http.Cookie, "has_js=[^;]+(; )?", "");
+
+# Remove any Google Analytics based cookies
+set req.http.Cookie = regsuball(req.http.Cookie, "__utm[^=]+=[^;]+(; )?", "");
+set req.http.Cookie = regsuball(req.http.Cookie, "_ga[^=]*=[^;]+(; )?", "");
+set req.http.Cookie = regsuball(req.http.Cookie, "_gcl_[^=]+=[^;]+(; )?", "");
+set req.http.Cookie = regsuball(req.http.Cookie, "_gid=[^;]+(; )?", "");
+
+# Remove DoubleClick offensive cookies
+set req.http.Cookie = regsuball(req.http.Cookie, "__gads=[^;]+(; )?", "");
+
+# Remove the Quant Capital cookies (added by some plugin, all __qca)
+set req.http.Cookie = regsuball(req.http.Cookie, "__qc.=[^;]+(; )?", "");
+
+# Remove the AddThis cookies
+set req.http.Cookie = regsuball(req.http.Cookie, "__atuv.=[^;]+(; )?", "");
+
+if ( req.url ~ "^/doc/" ) {
+  # unset req.http.Cookie:csrftoken;
+  # unset req.http.Cookie:config-sessionid;
+  # Let's remove all cookies in /doc/ :
+  unset req.http.Cookie;
+}
+
+# to remember selected version
+if ( req.url ~ "^/libraries/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
+
+# to remember selected version
+if ( req.url ~ "^/releases/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
+
+# to improve the news moderation experience. not strictly required.
+if ( req.url ~ "^/news/moderate/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
+
+# to improve the news moderation experience. not strictly required.
+if ( req.url ~ "^/news/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
+
+# Remove a ";" prefix in the cookie if present
+set req.http.Cookie = regsuball(req.http.Cookie, "^;\s*", "");
+
+# Are there cookies left with only spaces or that are empty?
+if (req.http.cookie ~ "^\s*$") {
+  unset req.http.cookie;
+}
+
+
+=== Set Surrogate-Key (fetch) ===
+if ( req.url ~ "^.*/release/.*$" ) {
+    set beresp.http.surrogate-key = if (beresp.http.surrogate-key, beresp.http.surrogate-key + " " + "release", "release");
+}
+if ( req.url ~ "^.*/latest/.*$" ) {
+    set beresp.http.surrogate-key = if (beresp.http.surrogate-key, beresp.http.surrogate-key + " " + "release", "release");
+}
+if ( req.url ~ "^.*/static/css/.*$" || req.url ~ "^/doc/_/css/.*$" ) {
+    set beresp.http.surrogate-key = if (beresp.http.surrogate-key, beresp.http.surrogate-key + " " + "deployment", "deployment");
+}
+
