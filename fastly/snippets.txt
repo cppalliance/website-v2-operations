@@ -1,3 +1,5 @@
+# Placement: fetch (vcl_fetch)
+# Priority: 100
 === Doc cache age (fetch) ===
 if ( (beresp.status == 301 || beresp.status == 302) && beresp.http.vary !~ "Cookie") {
     set beresp.http.vary = beresp.http.vary", Cookie";
@@ -61,6 +63,10 @@ if ( req.url ~ "^/$" ) {
   return (deliver);
 }
 
+
+# Remove certain cookies
+# Placement: recv (vcl_recv)
+# Priority: 100
 === Remove certain cookies (recv) ===
 # 2026-03-12 Bypass caching for logged in users, during metalab development
 # Temporary.
@@ -122,7 +128,9 @@ if (req.http.cookie ~ "^\s*$") {
   unset req.http.cookie;
 }
 
-
+# Set Surrogate-Key
+# Placement: fetch (vcl_fetch)
+# Priority: 99
 === Set Surrogate-Key (fetch) ===
 if ( req.url ~ "^.*/release/.*$" ) {
     set beresp.http.surrogate-key = if (beresp.http.surrogate-key, beresp.http.surrogate-key + " " + "release", "release");
