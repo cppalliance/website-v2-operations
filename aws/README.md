@@ -29,3 +29,43 @@ Docs:
 | boost.revsys.dev | Docs - revsys cluster |
 | boost.org-cppal-dev-v2.media | Media - cppal-dev testing environment |
 | boost.org-cppal-dev-v2 | Docs - cppal-dev |
+
+Set permissions on the buckets themselves.  
+
+main bucket example:  
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadStaticFolder",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::boost.org-cppal-dev-v2/static/*"
+        }
+    ]
+}
+```
+
+media bucket example:  
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadSyncedFiles",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::boost.org-cppal-dev-v2.media/*"
+        }
+    ]
+}
+```
+
+
+
+
