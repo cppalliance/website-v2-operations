@@ -70,9 +70,14 @@ if ( req.url ~ "^/$" ) {
 === Remove certain cookies (recv) ===
 # 2026-03-12 Bypass caching for logged in users, during metalab development
 # Temporary.
-if (req.url !~ "^/doc/" && req.http.Cookie ~ "config-sessionid=" && req.http.Cookie ~ "csrftoken=") {
-    return (pass);
-}
+# 2026-09-03 Narrowed the exclusion from ^/doc/ to ^/doc/libs/ so logged-in
+# testers get uncached user-guide and contributor-guide pages while the library
+# docs keep their cache hits. The "unset req.http.Cookie" for ^/doc/ below does
+# not undo this: return(pass) ends vcl_recv immediately, so these requests never
+# reach it and the session cookie survives to the backend.
+# if (req.url !~ "^/doc/libs/" && req.http.Cookie ~ "config-sessionid=" && req.http.Cookie ~ "csrftoken=") {
+#     return (pass);
+# }
 
 # Some generic cookie manipulation, useful for all templates that follow
 # Remove the "has_js" cookie
@@ -141,4 +146,31 @@ if ( req.url ~ "^.*/latest/.*$" ) {
 if ( req.url ~ "^.*/static/css/.*$" || req.url ~ "^/doc/_/css/.*$" ) {
     set beresp.http.surrogate-key = if (beresp.http.surrogate-key, beresp.http.surrogate-key + " " + "deployment", "deployment");
 }
+
+
+# Docs max-age
+# vcl_deliver priority 100
+if (req.url.path ~ "^/(doc/libs|static)/" && !resp.http.Cache-Control && resp.status == 200) {
+
+  if (resp.http.Content-Type ~ "^text/html") {
+    # HTML is rewritten by Django, so a deploy can change it.
+    set resp.http.Cache-Control = "public, max-age=600";
+
+  } else if (req.url.path ~ "^/doc/libs/(latest|develop|master)/" || req.url.path ~ "^/static/") {
+    # Mutable aliases: assets can be replaced under a stable URL.
+    set resp.http.Cache-Control = "public, max-age=600";
+
+  } else {
+    # Version-slug assets: passed through from S3 unmodified.
+    set resp.http.Cache-Control = "public, max-age=86400";
+  }
+
+  set resp.http.Vary = "Accept-Encoding";
+
+  # Fastly's TTL is longer than the browser's; without this, any object
+  # older than max-age arrives at the browser already stale.
+  set resp.http.X-Fastly-Age = resp.http.Age;
+  unset resp.http.Age;
+}
+
 
