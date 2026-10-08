@@ -1,0 +1,14 @@
+# Compress passed responses
+# Placement: deliver (vcl_deliver)
+# Priority: 10
+# beresp.gzip above only takes effect on responses that go through the cache.
+# Requests that vcl_recv passes (logged-in users) come back uncompressed, so
+# ask Fastly to compress those on the way out instead. Fastly only does so if
+# the client's Accept-Encoding allows it.
+#
+# fastly.ff.visits_this_service is 0 on the Fastly node that talks to the
+# browser, so a shield node doesn't compress a response that the edge node
+# would then receive already compressed.
+if (fastly_info.state ~ "PASS" && fastly.ff.visits_this_service == 0 && !resp.http.Content-Encoding && resp.http.Content-Type ~ "^(?:text/|application/(?:x-)?javascript|application/json|application/xml|image/svg\+xml)") {
+  set resp.http.X-Compress-Hint = "on";
+}
