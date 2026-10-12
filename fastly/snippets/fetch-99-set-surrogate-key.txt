@@ -1,0 +1,12 @@
+# Set Surrogate-Key (fetch)
+# Placement: fetch (vcl_fetch)
+# Priority: 99
+if ( req.url ~ "^.*/release/.*$" ) {
+    set beresp.http.surrogate-key = if (beresp.http.surrogate-key, beresp.http.surrogate-key + " " + "release", "release");
+}
+if ( req.url ~ "^.*/latest/.*$" ) {
+    set beresp.http.surrogate-key = if (beresp.http.surrogate-key, beresp.http.surrogate-key + " " + "release", "release");
+}
+if ( req.url ~ "^.*/static/css/.*$" || req.url ~ "^/doc/_/css/.*$" ) {
+    set beresp.http.surrogate-key = if (beresp.http.surrogate-key, beresp.http.surrogate-key + " " + "deployment", "deployment");
+}

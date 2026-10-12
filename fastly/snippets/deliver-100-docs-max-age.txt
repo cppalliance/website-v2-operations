@@ -1,0 +1,25 @@
+# Docs max-age
+# Placement: deliver (vcl_deliver)
+# Priority: 100
+if (req.url.path ~ "^/(doc/libs|static)/" && !resp.http.Cache-Control && resp.status == 200) {
+
+  if (resp.http.Content-Type ~ "^text/html") {
+    # HTML is rewritten by Django, so a deploy can change it.
+    set resp.http.Cache-Control = "public, max-age=600";
+
+  } else if (req.url.path ~ "^/doc/libs/(latest|develop|master)/" || req.url.path ~ "^/static/") {
+    # Mutable aliases: assets can be replaced under a stable URL.
+    set resp.http.Cache-Control = "public, max-age=600";
+
+  } else {
+    # Version-slug assets: passed through from S3 unmodified.
+    set resp.http.Cache-Control = "public, max-age=86400";
+  }
+
+  set resp.http.Vary = "Accept-Encoding";
+
+  # Fastly's TTL is longer than the browser's; without this, any object
+  # older than max-age arrives at the browser already stale.
+  set resp.http.X-Fastly-Age = resp.http.Age;
+  unset resp.http.Age;
+}

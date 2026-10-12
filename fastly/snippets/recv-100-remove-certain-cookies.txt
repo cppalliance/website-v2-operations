@@ -1,0 +1,67 @@
+# Remove certain cookies (recv)
+# Placement: recv (vcl_recv)
+# Priority: 100
+# 2026-03-12 Bypass caching for logged in users, during metalab development
+# Temporary.
+# 2026-09-03 Narrowed the exclusion from ^/doc/ to ^/doc/libs/ so logged-in
+# testers get uncached user-guide and contributor-guide pages while the library
+# docs keep their cache hits. The "unset req.http.Cookie" for ^/doc/ below does
+# not undo this: return(pass) ends vcl_recv immediately, so these requests never
+# reach it and the session cookie survives to the backend.
+# if (req.url !~ "^/doc/libs/" && req.http.Cookie ~ "config-sessionid=" && req.http.Cookie ~ "csrftoken=") {
+#     return (pass);
+# }
+
+# Some generic cookie manipulation, useful for all templates that follow
+# Remove the "has_js" cookie
+set req.http.Cookie = regsuball(req.http.Cookie, "has_js=[^;]+(; )?", "");
+
+# Remove any Google Analytics based cookies
+set req.http.Cookie = regsuball(req.http.Cookie, "__utm[^=]+=[^;]+(; )?", "");
+set req.http.Cookie = regsuball(req.http.Cookie, "_ga[^=]*=[^;]+(; )?", "");
+set req.http.Cookie = regsuball(req.http.Cookie, "_gcl_[^=]+=[^;]+(; )?", "");
+set req.http.Cookie = regsuball(req.http.Cookie, "_gid=[^;]+(; )?", "");
+
+# Remove DoubleClick offensive cookies
+set req.http.Cookie = regsuball(req.http.Cookie, "__gads=[^;]+(; )?", "");
+
+# Remove the Quant Capital cookies (added by some plugin, all __qca)
+set req.http.Cookie = regsuball(req.http.Cookie, "__qc.=[^;]+(; )?", "");
+
+# Remove the AddThis cookies
+set req.http.Cookie = regsuball(req.http.Cookie, "__atuv.=[^;]+(; )?", "");
+
+if ( req.url ~ "^/doc/" ) {
+  # unset req.http.Cookie:csrftoken;
+  # unset req.http.Cookie:config-sessionid;
+  # Let's remove all cookies in /doc/ :
+  unset req.http.Cookie;
+}
+
+# to remember selected version
+if ( req.url ~ "^/libraries/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
+
+# to remember selected version
+if ( req.url ~ "^/releases/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
+
+# to improve the news moderation experience. not strictly required.
+if ( req.url ~ "^/news/moderate/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
+
+# to improve the news moderation experience. not strictly required.
+if ( req.url ~ "^/news/" && req.http.cookie ~ "config-sessionid" ) {
+  return(pass);
+}
+
+# Remove a ";" prefix in the cookie if present
+set req.http.Cookie = regsuball(req.http.Cookie, "^;\s*", "");
+
+# Are there cookies left with only spaces or that are empty?
+if (req.http.cookie ~ "^\s*$") {
+  unset req.http.cookie;
+}

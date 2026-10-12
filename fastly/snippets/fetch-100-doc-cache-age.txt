@@ -1,0 +1,64 @@
+# Doc cache age (fetch)
+# Placement: fetch (vcl_fetch)
+# Priority: 100
+if ( (beresp.status == 301 || beresp.status == 302) && beresp.http.vary !~ "Cookie") {
+    set beresp.http.vary = beresp.http.vary", Cookie";
+}
+if ( beresp.status == 404 ) {
+    # 404 Cache Setting
+    set beresp.ttl = 600s;
+    set beresp.grace = 600s;
+    return(deliver);
+}
+if ( beresp.status == 503 ) {
+    # 503 Cache Setting
+    set beresp.ttl = 600s;
+    set beresp.grace = 600s;
+    return(deliver);
+}
+if ( beresp.status == 301 ) {
+    # 301 Cache Setting
+    set beresp.ttl = 600s;
+    set beresp.grace = 600s;
+    return(deliver);
+}
+if ( beresp.status == 302 ) {
+    # 302 Cache Setting
+    set beresp.ttl = 600s;
+    set beresp.grace = 600s;
+    return(deliver);
+}
+if ( req.url ~ "^/$" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/static/css/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/news/" ) {
+  set beresp.ttl = 300s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/user-guide/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/contributor-guide/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/community/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/libraries/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/releases/" ) {
+  set beresp.ttl = 3600s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/libs/develop/" ) {
+  set beresp.ttl = 1200s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/libs/master/" ) {
+  set beresp.ttl = 1200s;
+  return (deliver);
+} else if ( req.url ~ "^/doc/" ) {
+  set beresp.ttl = 604800s;
+  return (deliver);
+}
